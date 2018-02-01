@@ -25,7 +25,7 @@ describe('runner.js', () => {
         sandbox.stub(process, 'argv').value([null, 'this is not a file name']);
       });
 
-      it('should not run the function', () => {
+      it('should NOT call the function', () => {
         const { run } = require('../');
         const callback = sinon.spy(noop);
         run(__filename, callback);
@@ -39,12 +39,32 @@ describe('runner.js', () => {
         sandbox.stub(process, 'argv').value([null, __filename]);
       });
 
-      it('should not run the function', () => {
+      it('should call the function', () => {
         const { run } = require('../');
         const callback = sinon.spy(noop);
         run(__filename, callback);
 
         expect(callback.calledOnce).to.be.true;
+      });
+
+      it('should call the function with the expected 3 arguments', () => {
+        const { run } = require('../');
+        const callback = sinon.spy(noop);
+        run(__filename, callback, 2, 4, 6);
+
+        expect(callback.calledOnce).to.be.true;
+        expect(callback.calledWithExactly(2, 4, 6)).to.be.true;
+      });
+
+      it('should call the function with the expected N arguments', () => {
+        const { run } = require('../');
+        const callback = sinon.spy(noop);
+        const length = ~~(Math.random() * 10);
+        const nArgs = Array.from({ length }, (v, i) => i);
+        run(__filename, callback, ...nArgs);
+
+        expect(callback.calledOnce).to.be.true;
+        expect(callback.calledWithExactly(...nArgs)).to.be.true;
       });
     });
   });
