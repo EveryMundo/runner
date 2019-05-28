@@ -1,6 +1,6 @@
 {
   "name": "@everymundo/runner",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Runs a given script only if it is the main one called with node",
   "main": "index.js",
   "scripts": {
