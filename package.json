@@ -4,9 +4,11 @@
   "description": "Runs a given script only if it is the main one called with node",
   "main": "index.js",
   "scripts": {
-    "cover": "LOG_LEVEL=trace istanbul cover -x '*.test.js' _mocha",
-    "check-coverage": "istanbul check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
-    "test": "mocha"
+    "cover": "LOG_LEVEL=trace nyc -x test --reporter=lcov --reporter=text mocha test --recursive",
+    "check-coverage": "nyc check-coverage --statements 100 --branches 100 --functions 100 --lines 100",
+    "check-lint": "standard --env=mocha *.js lib/*.js spec/*.js spec/lib/*.js",
+    "fix-lint": "standard --env=mocha --fix *.js lib/*.js test/*.js",
+    "test": "mocha $@"
   },
   "config": {
     "ghooks": {
@@ -32,8 +34,9 @@
   "devDependencies": {
     "chai": "^4.2.0",
     "ghooks": "^2.0.4",
-    "istanbul": "^0.4.5",
     "mocha": "^6.1.4",
-    "sinon": "^7.3.2"
+    "nyc": "^14.1.1",
+    "sinon": "^7.3.2",
+    "standard": "^12.0.1"
   }
 }
