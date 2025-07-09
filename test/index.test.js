@@ -3,10 +3,10 @@
 /* eslint-env mocha */
 /* eslint-disable no-unused-expressions */
 
-const
-  sinon = require('sinon')
-
+const sinon = require('sinon')
 const { expect } = require('chai')
+
+const getSecureRandomNumber = (min = 0, max = 10) => min + (crypto.getRandomValues(new Uint8Array(1)) % (max - min + 1))
 
 describe('runner.js', () => {
   const noop = () => { }
@@ -14,14 +14,14 @@ describe('runner.js', () => {
   let sandbox
   beforeEach(() => {
     // creates sinon sandbox
-    sandbox = sinon.sandbox.create()
+    sandbox = sinon.createSandbox()
   })
 
-  // retores the sandbox
+  // restores the sandbox
   afterEach(() => { sandbox.restore() })
 
-  context('#run()', () => {
-    context('when filename is NOT the second arg', () => {
+  describe('#run()', () => {
+    describe('when filename is NOT the second arg', () => {
       beforeEach(() => {
         sandbox.stub(process, 'argv').value([null, 'this is not a file name'])
       })
@@ -35,7 +35,7 @@ describe('runner.js', () => {
       })
     })
 
-    context('when filename is the second arg', () => {
+    describe('when filename is the second arg', () => {
       beforeEach(() => {
         sandbox.stub(process, 'argv').value([null, __filename])
       })
@@ -60,7 +60,8 @@ describe('runner.js', () => {
       it('should call the function with the expected N arguments', () => {
         const { run } = require('../')
         const callback = sinon.spy(noop)
-        const length = ~~(Math.random() * 10)
+        // const length = ~~(Math.random() * 10)
+        const length = getSecureRandomNumber(1, 10)
         const nArgs = Array.from({ length }, (v, i) => i)
         run(__filename, callback, ...nArgs)
 
